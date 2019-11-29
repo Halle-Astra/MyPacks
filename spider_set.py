@@ -116,9 +116,7 @@ def spider_WISeREP(root=None,catalog_xpath = ['//*[@id="block-system-main"]/div/
     catalogs_final_t = []
     for i in range(len(catalogs_final[0])):
         temp = []
-        print('i is ',i)
         for j in range(len(catalogs_final)):
-            print('j is ',j)
             temp.append(catalogs_final[j][i])
         catalogs_final_t.append('\t'.join(temp))
     catalogs_final = '\n'.join(catalogs_final_t)
