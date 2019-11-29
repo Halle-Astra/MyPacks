@@ -13,10 +13,13 @@ def Get_and_Save(root,save_path = './'):
         f.write(t)
     print('File ',filepath,' is finished!')
 
-def fix_by_string(class_ls ,href_ls,string_ls=['SN'],mode = 'or'):
+def fix_by_string(class_ls ,href_ls,catalogs,string_ls=['SN'],mode = 'or'):
     size = len(class_ls)
     class_ls_n = []
     href_ls_n = [] 
+    catalogs_n = []
+    for i in range(len(catalogs)):
+        catalogs_n.append([])
     for i in range(size):
         for j in range(len(string_ls)):
             string = string_ls[j]
@@ -24,12 +27,16 @@ def fix_by_string(class_ls ,href_ls,string_ls=['SN'],mode = 'or'):
                 if mode ==  'or':
                     class_ls_n.append(class_ls[i])
                     href_ls_n.append(href_ls[i])
+                    
+                    break
                 if mode == 'and':
                     if j != len(string_ls)-1:
                         continue
                     else:
                         class_ls_n.append(class_ls[i])
                         href_ls_n.append(href_ls[i])
+                        for k in range(len(catalogs)):
+                            catalogs_n[k].append(catalogs[k][i])
     return class_ls_n,href_ls_n
 
 def get_html(root,driver,isnew = True):
@@ -39,11 +46,27 @@ def get_html(root,driver,isnew = True):
     html = etree.HTML(t)
     return html
 
-def spider_WISeREP(root=None):
-    '''Get data from WISeREP by this spider.
+def get_catalog(html,catalog_xpath):
+    if not catalog_xpath:
+        return []
+    catalogs = []
+    for xstring in catalog_xpath:
+        catalogs.append(html.xpath(xstring))
+    return catalogs  
+
+def spider_WISeREP(root=None,catalog_xpath = ['//*[@id="block-system-main"]/div/div[2]/div[3]/table/tbody/tr/td[16]/span/a/text()',\
+                                      '//*[@id="block-system-main"]/div/div[2]/div[3]/table/tbody/tr/td[8]/text()',\
+                                     '//*[@id="block-system-main"]/div/div[2]/div[3]/table/tbody/tr/td[5]/text()']):
+    '''spider_WISeREP(root=None,catalog_xpath = [...])
     
-    The args needed is the first url after your search,though it maybe very long.
+    Get data from WISeREP by this spider.
+    
+    The first arg is the first url after your search,though it maybe very long.
     The default url is set to get the data of SDSS SNe. 
+    
+    The second arg is a list of other xpaths that point to information which you need.
+    The default is redshift of the supernova.
+    If it isn't needed ,you can make it be a empty list but may be wrong.
     
     You need the packages below to run this program:
     requests    lxml    selenium'''
@@ -70,13 +93,38 @@ def spider_WISeREP(root=None):
         roots.append(root.split('?')[0]+f'?&page={k}'+root.split('?')[1])
     class_ls_final = []
     href_ls_final = []
+    catalogs_final = []
+    for k in range(len(catalog_xpath)):
+        catalogs_final.append([])
     for root_t in roots:
         html = get_html(root_t,driver)
         class_ls = html.xpath('//*[@id="block-system-main"]/div/div[2]/div[3]/table/tbody/tr/td[7]/text()')
         href_ls = html.xpath('//*[@id="block-system-main"]/div/div[2]/div[3]/table/tbody/tr/td[16]/span/a/@href')
-        class_ls,href_ls = fix_by_string(class_ls,href_ls)
+        catalogs = get_catalog(html,catalog_xpath)
+        class_ls,href_ls = fix_by_string(class_ls,href_ls,catalogs)
         class_ls_final+=class_ls
         href_ls_final+=href_ls
+        for k in range(len(catalogs)):
+            catalogs_final[k] += catalogs[k]
     driver.quit()
+    
+    catalogs_filename = save_path.replace('/','.txt')
+    catalogs_path = 'catalogs/'
+    if not os.path.exists(catalogs_path):
+        os.makedirs(catalogs_path)
+    catalogs_filename = catalogs_path+catalogs_filename
+    catalogs_final_t = []
+    for i in range(len(catalogs_final[0])):
+        temp = []
+        print('i is ',i)
+        for j in range(len(catalogs_final)):
+            print('j is ',j)
+            temp.append(catalogs_final[j][i])
+        catalogs_final_t.append('\t'.join(temp))
+    catalogs_final = '\n'.join(catalogs_final_t)
+    del catalogs_final_t
+    with open(catalogs_filename,'w') as f:
+        f.write(catalogs_final)
+        
     for i in href_ls_final:
         Get_and_Save(i,save_path)
