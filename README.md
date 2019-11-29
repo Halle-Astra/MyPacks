@@ -12,7 +12,7 @@ This file got from SDSS DR8 and adapted it for Python 3.
     
     The second arg is a list of other xpaths that point to information which you need.
     The default is redshift of the supernova.
-    If it isn't needed ,you can make it be a empty list but may be wrong.
+    If it isn't needed ,you can make it be a empty list.
     
     You need the packages below to run this program:
     requests    lxml    selenium
