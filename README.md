@@ -23,5 +23,5 @@ This file got from SDSS DR8 and adapted it for Python 3.
 	You need the packages below to run this program:
 	requests    lxml    selenium
 	And, you need a chrome and a chromedriver.exe which is suit for your chrome .
-	(Chromedriver can be download in http://chromedriver.storage.googleapis.com/index.html .
+	(Chromedriver can be downloaded in http://chromedriver.storage.googleapis.com/index.html .
 	Then,you need add it into Enviromental Variables of your device.)

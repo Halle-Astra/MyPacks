@@ -90,7 +90,7 @@ def spider_WISeREP(root=None,string_ls = ['SN'],catalog_xpath = ['//*[@id="block
 	You need the packages below to run this program:
 	requests    lxml    selenium
 	And, you need a chrome and a chromedriver.exe which is suit for your chrome .
-	(Chromedriver can be download in http://chromedriver.storage.googleapis.com/index.html .
+	(Chromedriver can be downloaded in http://chromedriver.storage.googleapis.com/index.html .
 	Then,you need add it into Enviromental Variables of your device.)'''
 	
 	if not root:
