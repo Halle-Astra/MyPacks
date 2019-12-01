@@ -1,3 +1,12 @@
+'''-----------------------------------
+Author	Halle Astra
+Date	2019/11/28
+Email	halle.wang@qq.com
+-----------------------------------
+This file is a set of the functions in my spider program.
+-----------------------------------'''
+
+
 import requests as rq 
 from lxml import etree
 from selenium import webdriver
@@ -13,7 +22,7 @@ def Get_and_Save(root,save_path = './'):
 		f.write(t)
 	print('File ',filepath,' is finished!')
 
-def fix_by_string(class_ls ,href_ls,catalogs=None,string_ls=['SN'],mode = 'or'):
+def fix_by_string(class_ls ,href_ls,string_ls,catalogs=None,mode = 'or'):
 	size = len(class_ls)
 	class_ls_n = []
 	href_ls_n = [] 
@@ -58,22 +67,31 @@ def get_catalog(html,catalog_xpath):
 		catalogs.append(html.xpath(xstring))
 	return catalogs  
 
-def spider_WISeREP(root=None,catalog_xpath = ['//*[@id="block-system-main"]/div/div[2]/div[3]/table/tbody/tr/td[16]/span/a/text()',\
+def spider_WISeREP(root=None,string_ls = ['SN'],catalog_xpath = ['//*[@id="block-system-main"]/div/div[2]/div[3]/table/tbody/tr/td[16]/span/a/text()',\
 									  '//*[@id="block-system-main"]/div/div[2]/div[3]/table/tbody/tr/td[8]/text()',\
 									 '//*[@id="block-system-main"]/div/div[2]/div[3]/table/tbody/tr/td[5]/text()']):
-	'''spider_WISeREP(root=None,catalog_xpath = [...])
+	'''------------------------------------------------------------------
+	Get data from WISeREP by this spider script.
+
+	It will place datafiles(e.g. .dat, .fits) in ./data_{groupName}.
+	And it will place catalog_file in ./catalogs when catalogs_xpath is not an empty list .
+	The fields of default catalog_file are 	fileName ,redshift ,targetName in program.
+	------------------------------------------------------------------
+	root			the first url after your search,though it maybe very long.
+					The default url is set to get the data of SDSS SNe. 
 	
-	Get data from WISeREP by this spider.
-	
-	The first arg is the first url after your search,though it maybe very long.
-	The default url is set to get the data of SDSS SNe. 
-	
-	The second arg is a list of other xpaths that point to information which you need.
-	The default is redshift of the supernova.
-	If it isn't needed ,you can make it be a empty list.
-	
+	string_ls		the string that will be used in the function fix_by_string.
+					That function will reserve items whose type is existing in this list.
+
+	catalog_xpath		a list of other xpaths that point to information which you need.
+					The default is redshift of the supernova.
+					If it isn't needed ,you can make it be an empty list.
+	-------------------------------------------------------------------
 	You need the packages below to run this program:
-	requests    lxml    selenium'''
+	requests    lxml    selenium
+	And, you need a chrome and a chromedriver.exe which is suit for your chrome .
+	(Chromedriver can be download in http://chromedriver.storage.googleapis.com/index.html .
+	Then,you need add it into Enviromental Variables of your device.)'''
 	
 	if not root:
 		root = 'https://wiserep.weizmann.ac.il/search/spectra?&name=&name_like=0&public=all&inserted_period_value=0&inserted_period_units=days&type%5B%5D=null&type_family%5B%5D=null&instruments%5B%5D=null&spectypes%5B%5D=10&qualityid%5B%5D=null&groupid%5B%5D=48&spectra_count=&redshift_min=&redshift_max=&obsdate_start%5Bdate%5D=&obsdate_end%5Bdate%5D=&spec_phase_min=&spec_phase_max=&spec_phase_unit=days&phase_types%5B%5D=null&filters%5B%5D=null&methods%5B%5D=null&wl_min=&wl_max=&obj_ids=&spec_ids=&ids_or=0&reporters=&publish=&contrib=&last_modified_start%5Bdate%5D=&last_modified_end%5Bdate%5D=&last_modified_modifier=&creation_start%5Bdate%5D=&creation_end%5Bdate%5D=&creation_modifier=&show_aggregated_spectra=0&show_all_spectra=0&table_phase_name=40&num_page=50&display%5Bobj_rep_internal_name%5D=1&display%5Bobj_type_family_name%5D=0&display%5Bobj_type_name%5D=1&display%5Bredshift%5D=1&display%5Bphases%5D=1&display%5Bexptime%5D=1&display%5Bobserver%5D=1&display%5Breducers%5D=1&display%5Bsource_group_name%5D=1&display%5Basciifile%5D=1&display%5Bfitsfile%5D=1&display%5Bspectype_name%5D=1&display%5Bquality_name%5D=1&display%5Bextinction_corr_name%5D=0&display%5Bflux_calib_name%5D=0&display%5Bwl_medium_name%5D=0&display%5Bgroups%5D=0&display%5Bpublic%5D=1&display%5Bend_pop_period%5D=0&display%5Breporters%5D=0&display%5Bpublish%5D=1&display%5Bcontrib%5D=0&display%5Bremarks%5D=0&display%5Bcreatedby%5D=1&display%5Bcreationdate%5D=1&display%5Bmodifiedby%5D=0&display%5Blastmodified%5D=0'
@@ -106,7 +124,7 @@ def spider_WISeREP(root=None,catalog_xpath = ['//*[@id="block-system-main"]/div/
 		class_ls = html.xpath('//*[@id="block-system-main"]/div/div[2]/div[3]/table/tbody/tr/td[7]/text()')
 		href_ls = html.xpath('//*[@id="block-system-main"]/div/div[2]/div[3]/table/tbody/tr/td[16]/span/a/@href')
 		catalogs = get_catalog(html,catalog_xpath)
-		class_ls,href_ls,catalogs = fix_by_string(class_ls,href_ls,catalogs)
+		class_ls,href_ls,catalogs = fix_by_string(class_ls,href_ls,string_ls,catalogs)
 		class_ls_final+=class_ls
 		href_ls_final+=href_ls
 		if catalogs_final:
