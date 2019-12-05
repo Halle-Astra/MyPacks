@@ -25,3 +25,7 @@ This file got from SDSS DR8 and adapted it for Python 3.
 	And, you need a chrome and a chromedriver.exe which is suit for your chrome .
 	(Chromedriver can be downloaded in http://chromedriver.storage.googleapis.com/index.html .
 	Then,you need add it into Enviromental Variables of your device.)
+
+## ipynb2pdf.py
+    This file got from https://www.jianshu.com/p/49a0c9f74d59
+
