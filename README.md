@@ -1,8 +1,8 @@
 # MyPacks
 ## sqlcl.py
-This file got from SDSS DR8 and adapted it for Python 3.
+Got this file from SDSS DR8 and adapted it for Python 3.
 ## spider\_set.py
-    This file is a set of the functions in my spider program.
+This file is a set of the functions in my spider program.
 ### spider\_WISeREP
 	Get data from WISeREP by this spider script.
 
@@ -27,5 +27,5 @@ This file got from SDSS DR8 and adapted it for Python 3.
 	Then,you need add it into Enviromental Variables of your device.)
 
 ## ipynb2pdf.py
-    This file got from https://www.jianshu.com/p/49a0c9f74d59
+Got this file from https://www.jianshu.com/p/49a0c9f74d59
 
