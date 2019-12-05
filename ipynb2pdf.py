@@ -1,4 +1,4 @@
-'''This file got from https://www.jianshu.com/p/49a0c9f74d59'''
+'''Got this file from https://www.jianshu.com/p/49a0c9f74d59'''
 import sys
 import subprocess
 import pdfkit
